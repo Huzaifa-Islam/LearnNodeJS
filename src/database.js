@@ -35,6 +35,7 @@ async function main() {
     return 'done.';
   }
 
+  //correcting the commit msg
 
   main()
   .then(console.log)
