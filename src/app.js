@@ -2,45 +2,30 @@ const express = require("express");
 
 const app = express();
 
-// app.use("/admin",(req,res,next)=>{
-//     let token = "xyz";
-//     console.log("Admin auth is checked")
-//     let isAuthorized = token==="xyz";
-//     if(isAuthorized){
-//         next();
-//     }
-//     else{
-//         res.sendStatus(401).send("You are not authorized as Admin.")
-//     }
-// })
+//Error Handling scenario  -- write  Error handling always at the end
+app.get("/getUserInfo",(req,res)=>{
+    //Logic of DB call and get user data
 
-const {adminAuth,userAuth} = require('./middlewares/auth')
-
-app.use("/admin", adminAuth)
-
-app.post("/user/login",(req,res)=>{
-    console.log("login called.. auth is not needed so auth middleware is not used here");
-    res.send("login called");
-});
-
-
-app.get("/user/data",userAuth ,(req,res)=>{
-    console.log("got user data !!")
-    res.send("got user data")
+    throw new Error("afkjnkjfna");
+    res.send("user data sent");
 })
 
-app.get("/admin/getAllData",(req,res)=>{
-    console.log("data retrieved!!")
-    res.send("All data retreived");
+app.use("/",(err,req,res,next)=>{
+    if(err){
+        res.status(500).send("something went wrong")
+    }
 })
 
-app.delete("/admin/deleteAllData",(req,res)=>{
-    console.log("data dele ted!!")
-    res.send("All data deleted")
-})
-
-app.post("/admin/updateData",(req,res)=>{
-    res.send("Data updated successfully");
+// Error Handling scenario 2 -- best apprach use try catch
+app.get("/getUserInfo2",(req,res)=>{
+    try{
+    //Logic of DB call and get user data
+    throw new Error("Internal server error");
+    res.send("user data sent");   
+    }
+    catch(err){
+        res.status(500).send(err.message);
+    }
 })
 
 app.listen(3000,()=>{
